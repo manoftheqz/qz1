@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Coming Soon</title>
+  <meta name="description" content="Quarterzips. Matcha. Distinction." />
+
+  <style>
+    :root {
+      --bg: #0b1020;
+      --card: rgba(255,255,255,.08);
+      --text: rgba(255,255,255,.95);
+      --muted: rgba(255,255,255,.70);
+      --border: rgba(255,255,255,.18);
+      --accent: #7c5cff;
+      --accent2:#3dd6d0;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100svh;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1000px 600px at 20% 10%, rgba(124,92,255,.30), transparent 60%),
+        radial-gradient(900px 600px at 85% 70%, rgba(61,214,208,.22), transparent 55%),
+        linear-gradient(180deg, #070a14, var(--bg));
+      display: grid;
+      place-items: center;
+      padding: 24px 16px;
+    }
+
+    .wrap {
+      width: min(720px, 100%);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: clamp(22px, 5vw, 46px);
+      backdrop-filter: blur(10px);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      box-shadow: 0 0 18px rgba(124,92,255,.6);
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(32px, 5.8vw, 56px);
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+    }
+
+    p {
+      margin: 0 0 24px;
+      max-width: 56ch;
+      color: var(--muted);
+      font-size: clamp(16px, 2.3vw, 18px);
+      line-height: 1.55;
+    }
+
+    form {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+      margin-top: 8px;
+    }
+
+    .field {
+      display: flex;
+      padding: 10px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.18);
+    }
+
+    input[type="email"] {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      outline: none;
+      color: var(--text);
+      font-size: 16px;
+      padding: 10px;
+    }
+
+    input::placeholder {
+      color: rgba(255,255,255,.45);
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 16px;
+      font-weight: 650;
+      color: #0b1020;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      box-shadow: 0 14px 34px rgba(124,92,255,.25);
+      transition: transform .08s ease, filter .2s ease;
+      width: 100%;
+    }
+
+    button:active {
+      transform: translateY(1px) scale(.99);
+    }
+
+    .fineprint {
+      margin-top: 12px;
+      font-size: 13px;
+      color: rgba(255,255,255,.55);
+    }
+
+    .status {
+      margin-top: 12px;
+      min-height: 1.2em;
+      font-size: 14px;
+    }
+
+    .status.ok { color: #3dd6d0; }
+    .status.err { color: #ff9b9b; }
+
+    @media (min-width: 560px) {
+      form {
+        grid-template-columns: 1fr auto;
+        align-items: center;
+      }
+      button {
+        width: auto;
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <section class="card">
+      <div class="badge">
+        <span class="dot"></span>
+        Launching soon
+      </div>
+
+      <h1>A movement. Not just a clothing.</h1>
+
+      <p>Your source for the lifestyle revolution of our generation.</p>
+
+      <!-- Formspree form -->
+      <form id="emailForm" action="https://formspree.io/f/xldqklgg" method="POST">
+        <div class="field">
+          <input
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            required
+            autocomplete="email"
+          />
+        </div>
+
+        <button type="submit">Join Us</button>
+      </form>
+
+      <div class="status" id="status"></div>
+
+      <div class="fineprint">
+        Quarterzips. Matcha. Distinction.
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById("emailForm");
+    const statusEl = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      statusEl.textContent = "";
+
+      const response = await fetch(form.action, {
+        method: form.method,
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (response.ok) {
+        statusEl.textContent = "You’re in. Welcome.";
+        statusEl.className = "status ok";
+        form.reset();
+      } else {
+        statusEl.textContent = "Something went wrong. Please try again.";
+        statusEl.className = "status err";
+      }
+    });
+  </script>
+</body>
+</html>
